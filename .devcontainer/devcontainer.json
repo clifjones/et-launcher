@@ -1,0 +1,27 @@
+  {
+	"name": "Tauri Rust Dev Container",
+	"build": {
+	  "dockerfile": "Dockerfile",
+	  "context": ".."
+	},
+	"customizations": {
+	  "vscode": {
+		"extensions": [
+		  "tauri-apps.tauri-vscode",
+		  "esbenp.prettier-vscode",
+		  "lfs.vscode-emacs-friendly",
+		  "ms-azuretools.vscode-docker"
+		]
+	  }
+	},
+	"runArgs": [
+    	"--env", "DISPLAY=${env:DISPLAY}",
+    	"--volume", "/tmp/.X11-unix:/tmp/.X11-unix"
+	],
+	"features": {
+	  "ghcr.io/devcontainers/features/rust:1": {},
+	  "ghcr.io/devcontainers/features/node:1": {}
+	},
+	"postCreateCommand": "bash ./.devcontainer/setup.sh"
+  }
+  
