@@ -32,8 +32,5 @@ jobs:
       - name: Install Frontend Dependencies
         run: npm install
 
-      - name: Cargo build
-        run: cargo build
-
       - name: Build Tauri App
         run: npx tauri build
