@@ -9,7 +9,7 @@
   },
   "package": {
     "productName": "et-launcher",
-    "version": "0.1.0"
+    "version": "0.3.0"
   },
   "tauri": {
     "allowlist": {
@@ -23,7 +23,8 @@
       {
         "title": "et-launcher",
         "width": 800,
-        "height": 600
+        "height": 600,
+        "resizable": true
       }
     ],
     "security": {

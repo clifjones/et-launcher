@@ -1,0 +1,123 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0; /* Remove default margin */
+  padding: 0; /* Remove default padding */
+  display: flex;
+  flex-direction: column; /* Stack content vertically */
+  width: 800px; /* Fixed width to match Tauri window */
+  height: 600px; /* Fixed height to match Tauri window */
+  overflow: hidden; /* Prevent body scrollbars */
+}
+
+#app {
+  flex: 1; /* Occupy all available space in body */
+  width: 100%; /* Full width of body */
+  box-sizing: border-box; /* Include padding in width calculations */
+  display: flex;
+  flex-direction: column; /* Stack child divs vertically */
+  align-items: center; /* Center child divs horizontally */
+  overflow-y: hidden; /* Allow scrolling if content overflows */
+}
+
+/* Main view pane for displaying radio info */
+.main-view {
+  width: 100%;
+  background-color: #f9f9f9;
+  margin: 5px 0;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+.console-container {
+  width: 100%; /* Match other containers */
+  background-color: #f0f0f0; /* Match textarea background */  
+  margin: 5px 0; /* Reduced margin for tighter stacking */
+  padding: 8px; /* Minimal padding for internal spacing */
+  border: 1px solid #ccc; /* Keep border for visual separation */
+  border-radius: 5px; /* Keep rounded corners */
+  box-sizing: border-box;
+  display: none; /* Hide console until enabled */
+}
+
+.dialog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.dialog-content {
+  background: white;
+  padding: 20px;
+  border-radius: 5px;
+  width: 100%;
+  max-width: 600px;
+  box-sizing: border-box;
+}
+
+.form-group {
+  margin: 5px 0; /* Reduced margin for tighter stacking */
+  display: flex;
+  align-items: center;
+  min-height: 30px; /* Ensure space for labels and inputs */
+}
+
+.form-group label {
+  width: 150px;
+  text-align: right;
+  margin-right: 8px; /* Reduced margin for tighter layout */
+  color: #000000; /* Explicit black color */
+  font-weight: bold; /* Make labels stand out */
+  display: inline-block;
+  visibility: visible;
+}
+
+.form-group input {
+  flex: 1;
+  padding: 5px;
+  font-size: 14px;
+}
+
+.dialog-buttons {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+
+.dialog-buttons button {
+  padding: 8px 16px;
+  margin-left: 10px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+label {
+  text-align: center;
+  font-weight: bold;
+  display: block;
+  margin: 5px 8px; /* Reduced margin */
+  color: #000000; /* Black text for console label */
+}
+
+#console-output {
+  width: 100%; /* Full width */
+  height: 80px; /* Reduced height to fit within 600px */
+  background-color: #1e1e1e;
+  color: #ffffff;
+  font-family: "Courier New", Courier, monospace;
+  padding: 8px; /* Minimal padding */
+  border: none;
+  resize: none;
+  border-radius: 0; /* No rounded corners */
+  box-sizing: border-box;
+  overflow-y: auto; /* Enable vertical scrolling */
+}

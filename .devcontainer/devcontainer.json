@@ -10,7 +10,8 @@
 		  "tauri-apps.tauri-vscode",
 		  "esbenp.prettier-vscode",
 		  "lfs.vscode-emacs-friendly",
-		  "ms-azuretools.vscode-docker"
+		  "ms-azuretools.vscode-docker",
+		  "ktiays.aicursor"
 		]
 	  }
 	},
