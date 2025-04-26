@@ -44,8 +44,8 @@ document.addEventListener("DOMContentLoaded", () => {
     </div>
     
     <div class="button-container">
-      <button id="app1-btn">App 1</button>
-      <button id="app2-btn">App 2</button>
+      <button id="radio-btn">Change Radio</button>
+      <button id="mode-btn">Change Mode</button>
     </div>
     
     <div class="console-container">
@@ -134,25 +134,25 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Attach event listeners to app buttons
-  document.getElementById("app1-btn")?.addEventListener("click", async () => {
+  document.getElementById("radio-btn")?.addEventListener("click", async () => {
     try {
-      const result = await invoke("run_app", { appName: "emacs" });
-      appendToConsole(`App 1: ${result}`);
-      console.log("App 1 result:", result);
+      const result = await invoke("run_app", { appName: "et-radio" });
+      appendToConsole(`et-radio: ${result}`);
+      console.log("et-radio result:", result);
     } catch (error) {
-      appendToConsole(`App 1 Error: ${error}`);
-      console.error("Failed to run App 1:", error);
+      appendToConsole(`et-radio Error: ${error}`);
+      console.error("Failed to run et-radio:", error);
     }
   });
 
-  document.getElementById("app2-btn")?.addEventListener("click", async () => {
+  document.getElementById("mode-btn")?.addEventListener("click", async () => {
     try {
-      const result = await invoke("run_app", { appName: "date" });
-      appendToConsole(`App 2: ${result}`);
-      console.log("App 2 result:", result);
+      const result = await invoke("run_app", { appName: "et-mode" });
+      appendToConsole(`et-mode: ${result}`);
+      console.log("et-mode result:", result);
     } catch (error) {
-      appendToConsole(`App 2 Error: ${error}`);
-      console.error("Failed to run App 2:", error);
+      appendToConsole(`et-mode Error: ${error}`);
+      console.error("Failed to run et-mode:", error);
     }
   });
 });

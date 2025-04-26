@@ -41,6 +41,11 @@ body {
   box-sizing: border-box;
 }
 
+.config-container h2,
+.mode-container h2 {
+  text-align: center; /* Center the User Configuration and Mode labels */
+}
+
 .form-group {
   margin: 5px 0; /* Reduced margin for tighter stacking */
   display: flex;
