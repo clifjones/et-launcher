@@ -490,4 +490,6 @@ These are ready-to-go base images maintained by Microsoft. Examples:
 Image Name	Purpose	Notes
 mcr.microsoft.com/devcontainers/base:ubuntu-22.04	Basic Ubuntu 22.04	Small, minimal setup. Good if you want to control packages yourself.
 
+GDK_SYNCHRONIZE=1 npm run tauri dev
 
+Works on Ubuntu 22.10
