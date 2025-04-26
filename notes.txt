@@ -450,3 +450,5 @@ The JSON object for steps 3 and 4 above looks like this:
   "winlinkPasswd": "NOPASS"
 }
 
+04/26/25 Ubuntu 22.04 compatible Tauri
+https://github.com/tauri-apps/tauri-action
