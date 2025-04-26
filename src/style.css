@@ -1,45 +1,51 @@
 body {
   font-family: Arial, sans-serif;
-  margin: 0; /* Remove default margin to allow full-width console */
+  margin: 0; /* Remove default margin */
+  padding: 0; /* Remove default padding */
   display: flex;
   flex-direction: column; /* Stack content vertically */
   min-height: 100vh; /* Ensure body takes full viewport height */
 }
 
 #app {
-  text-align: center;
-  flex: 1; /* Allow app content to take available space */
-  padding: 0 20px 180px; /* Remove top padding, keep sides and bottom */
-  box-sizing: border-box;
-  overflow-y: hidden;
+  flex: 1; /* Occupy all available space in body */
+  width: 100%; /* Full width of body */
+  box-sizing: border-box; /* Include padding in width calculations */
+  display: flex;
+  flex-direction: column; /* Stack child divs vertically */
+  align-items: center; /* Center child divs horizontally */
+  padding: 0 0 120px; /* No top/side padding, bottom padding for console */
+  overflow-y: auto; /* Allow scrolling if content overflows */
 }
 
 .config-container,
-.mode-container {
-  margin: 0 0 20px; /* Remove top margin for config-container */
-  padding: 15px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
+.mode-container,
+.button-container,
+.button-container {
+  width: 100%; /* Full width up to max-width */
+  max-width: 600px; /* Maintain max-width for readability */
+  margin: 0; /* No margin to minimize spacing */
+  padding: 8px; /* Minimal padding for internal spacing */
+  border: 1px solid #ccc; /* Keep border for visual separation */
+  border-radius: 5px; /* Keep rounded corners */
+  box-sizing: border-box;
 }
 
 .form-group {
-  margin: 10px 0;
+  margin: 5px 0; /* Reduced margin for tighter stacking */
   display: flex;
   align-items: center;
-  min-height: 30px; /* Ensure enough space for labels and inputs */
+  min-height: 30px; /* Ensure space for labels and inputs */
 }
 
 .form-group label {
   width: 150px;
   text-align: right;
-  margin-right: 10px;
-  color: #000000; /* Explicit black color to ensure visibility */
+  margin-right: 8px; /* Reduced margin for tighter layout */
+  color: #000000; /* Explicit black color */
   font-weight: bold; /* Make labels stand out */
-  display: inline-block; /* Ensure labels are block-like for layout */
-  visibility: visible; /* Force visibility */
+  display: inline-block;
+  visibility: visible;
 }
 
 .form-group input {
@@ -52,19 +58,15 @@ body {
   background-color: #f0f0f0;
 }
 
-.button-container {
-  margin: 20px 0;
-}
-
 button {
-  padding: 10px 20px;
-  margin: 0 10px;
+  padding: 8px 16px; /* Slightly reduced padding */
+  margin: 0 8px; /* Reduced margin between buttons */
   cursor: pointer;
-  font-size: 16px;
+  font-size: 14px; /* Slightly smaller font for compactness */
 }
 
 #save-config-btn {
-  margin-top: 10px;
+  margin-top: 5px; /* Reduced margin */
   width: 100px;
 }
 
@@ -73,29 +75,30 @@ button {
   bottom: 0;
   left: 0;
   width: 100%; /* Full viewport width */
-  background-color: #1e1e1e; /* Match textarea background for seamless look */
-  padding: 10px 0; /* Padding for label and textarea */
+  background-color: #f0f0f0; /* Match textarea background */
+  padding: 8px 0; /* Minimal padding */
   box-sizing: border-box;
-  z-index: 1000; /* Ensure it stays above other content */
+  z-index: 1000; /* Ensure it stays above content */
 }
 
 label {
+  text-align: center;
   font-weight: bold;
   display: block;
-  margin: 5px 10px;
-  color: #ffffff; /* White text to match console */
+  margin: 5px 8px; /* Reduced margin */
+  color: #000000; /* White text for console */
 }
 
 #console-output {
-  width: 100%; /* Full width of parent (console-container) */
+  width: 100%; /* Full width */
   height: 100px;
   background-color: #1e1e1e;
   color: #ffffff;
   font-family: "Courier New", Courier, monospace;
-  padding: 10px;
+  padding: 8px; /* Minimal padding */
   border: none;
   resize: none;
-  border-radius: 0; /* Remove rounded corners for edge-to-edge look */
+  border-radius: 0; /* No rounded corners */
   box-sizing: border-box;
-  overflow-y: auto; /* Enable vertical scrolling for console output */
+  overflow-y: auto; /* Enable vertical scrolling */
 }

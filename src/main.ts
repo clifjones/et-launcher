@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
     </div>
     
     <div class="console-container">
-      <label for="console-output">Console Output:</label>
+      <label for="console-output">Console Output</label>
       <textarea id="console-output" readonly></textarea>
     </div>
   `;
