@@ -9,13 +9,14 @@ body {
 #app {
   text-align: center;
   flex: 1; /* Allow app content to take available space */
-  padding: 20px; /* Add padding for content */
+  padding: 0 20px 180px; /* Remove top padding, keep sides and bottom */
   box-sizing: border-box;
+  overflow-y: hidden;
 }
 
 .config-container,
 .mode-container {
-  margin: 20px 0;
+  margin: 0 0 20px; /* Remove top margin for config-container */
   padding: 15px;
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -87,7 +88,7 @@ label {
 
 #console-output {
   width: 100%; /* Full width of parent (console-container) */
-  height: 150px;
+  height: 100px;
   background-color: #1e1e1e;
   color: #ffffff;
   font-family: "Courier New", Courier, monospace;
@@ -96,4 +97,5 @@ label {
   resize: none;
   border-radius: 0; /* Remove rounded corners for edge-to-edge look */
   box-sizing: border-box;
+  overflow-y: auto; /* Enable vertical scrolling for console output */
 }

@@ -12,8 +12,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const app = document.createElement("div");
   app.id = "app";
   app.innerHTML = `
-    <h1>App Launcher</h1>
-    
     <div class="config-container">
       <h2>User Configuration</h2>
       <form id="user-config-form">
