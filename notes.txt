@@ -493,3 +493,10 @@ mcr.microsoft.com/devcontainers/base:ubuntu-22.04	Basic Ubuntu 22.04	Small, mini
 GDK_SYNCHRONIZE=1 npm run tauri dev
 
 Works on Ubuntu 22.10
+
+# Install RepoMix
+npm install -g repomix
+# Initialize config
+repomix --init
+# package project
+repomix
