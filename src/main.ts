@@ -53,6 +53,13 @@ document.addEventListener("DOMContentLoaded", () => {
       <textarea id="console-output" readonly></textarea>
     </div>
   `;
+  
+  // Remove existing app element if it exists
+  const existingApp = document.getElementById("app");
+  if (existingApp && existingApp.parentNode) {
+    existingApp.parentNode.removeChild(existingApp);
+  }
+  
   document.body.appendChild(app);
 
   // Function to append output to the console textarea
