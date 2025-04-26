@@ -452,3 +452,42 @@ The JSON object for steps 3 and 4 above looks like this:
 
 04/26/25 Ubuntu 22.04 compatible Tauri
 https://github.com/tauri-apps/tauri-action
+
+npm create tauri-app@latest -- --tauri-version 1
+
+et-launcher git:(tauri-1) ✗ npm create tauri-app@latest -- --tauri-version 1
+Need to install the following packages:
+  create-tauri-app@4.5.9
+Ok to proceed? (y) 
+✔ Project name · et-launcher
+✔ Identifier · com.jones-clan.et-launcher
+✔ Choose which language to use for your frontend · TypeScript / JavaScript - (pnpm, yarn, npm, deno, bun)
+✔ Choose your package manager · npm
+✔ Choose your UI template · Vanilla
+✔ Choose your UI flavor · TypeScript
+
+Template created!
+
+Your system is missing dependencies (or they do not exist in $PATH):
+╭────────────────────┬─────────────────────────────────────────────────────────────────────────────────────╮
+│ Rust               │ Visit https://www.rust-lang.org/learn/get-started#installing-rust                   │
+├────────────────────┼─────────────────────────────────────────────────────────────────────────────────────┤
+│ webkit2gtk & rsvg2 │ Visit https://v1.tauri.app/v1/guides/getting-started/prerequisites#setting-up-linux │
+╰────────────────────┴─────────────────────────────────────────────────────────────────────────────────────╯
+
+Make sure you have installed the prerequisites for your OS: https://v1.tauri.app/v1/guides/getting-started/prerequisites/, then run:
+  cd et-launcher
+  npm install
+  npm run tauri dev
+
+Dev Container Rebuild:
+Ctrl+Shift+P Dev Containers: Rebuild Container
+
+1. Official VS Code Dev Container Images
+These are ready-to-go base images maintained by Microsoft. Examples:
+
+
+Image Name	Purpose	Notes
+mcr.microsoft.com/devcontainers/base:ubuntu-22.04	Basic Ubuntu 22.04	Small, minimal setup. Good if you want to control packages yourself.
+
+

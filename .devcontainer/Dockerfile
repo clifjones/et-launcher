@@ -1,8 +1,8 @@
-FROM mcr.microsoft.com/devcontainers/base:debian
+FROM mcr.microsoft.com/devcontainers/base:ubuntu-22.04
 
 # Install Tauri dependencies
 RUN apt-get update && apt-get install -y \
-    libwebkit2gtk-4.1-dev \
+    libwebkit2gtk-4.0-dev \
     build-essential \
     curl \
     wget \

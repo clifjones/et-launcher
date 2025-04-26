@@ -12,6 +12,7 @@ dist
 dist-ssr
 *.local
 et-os-addons
+v2
 
 # Editor directories and files
 .vscode/*
