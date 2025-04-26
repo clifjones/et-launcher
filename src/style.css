@@ -4,7 +4,9 @@ body {
   padding: 0; /* Remove default padding */
   display: flex;
   flex-direction: column; /* Stack content vertically */
-  min-height: 100vh; /* Ensure body takes full viewport height */
+  width: 800px; /* Fixed width to match Tauri window */
+  height: 600px; /* Fixed height to match Tauri window */
+  overflow: hidden; /* Prevent body scrollbars */
 }
 
 #app {
@@ -14,17 +16,25 @@ body {
   display: flex;
   flex-direction: column; /* Stack child divs vertically */
   align-items: center; /* Center child divs horizontally */
-  padding: 0 0 120px; /* No top/side padding, bottom padding for console */
-  overflow-y: auto; /* Allow scrolling if content overflows */
+  overflow-y: hidden; /* Allow scrolling if content overflows */
 }
 
 .config-container,
 .mode-container,
-.button-container,
 .button-container {
   width: 100%; /* Full width up to max-width */
   max-width: 600px; /* Maintain max-width for readability */
-  margin: 0; /* No margin to minimize spacing */
+  margin: 5px 0; /* Reduced margin for tighter stacking */
+  padding: 8px; /* Minimal padding for internal spacing */
+  border: 1px solid #ccc; /* Keep border for visual separation */
+  border-radius: 5px; /* Keep rounded corners */
+  box-sizing: border-box;
+}
+
+.console-container {
+  width: 100%; /* Match other containers */
+  background-color: #f0f0f0; /* Match textarea background */  
+  margin: 5px 0; /* Reduced margin for tighter stacking */
   padding: 8px; /* Minimal padding for internal spacing */
   border: 1px solid #ccc; /* Keep border for visual separation */
   border-radius: 5px; /* Keep rounded corners */
@@ -70,28 +80,17 @@ button {
   width: 100px;
 }
 
-.console-container {
-  position: fixed; /* Pin to bottom */
-  bottom: 0;
-  left: 0;
-  width: 100%; /* Full viewport width */
-  background-color: #f0f0f0; /* Match textarea background */
-  padding: 8px 0; /* Minimal padding */
-  box-sizing: border-box;
-  z-index: 1000; /* Ensure it stays above content */
-}
-
 label {
   text-align: center;
   font-weight: bold;
   display: block;
   margin: 5px 8px; /* Reduced margin */
-  color: #000000; /* White text for console */
+  color: #000000; /* Black text for console label */
 }
 
 #console-output {
   width: 100%; /* Full width */
-  height: 100px;
+  height: 80px; /* Reduced height to fit within 600px */
   background-color: #1e1e1e;
   color: #ffffff;
   font-family: "Courier New", Courier, monospace;
