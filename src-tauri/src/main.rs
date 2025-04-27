@@ -7,6 +7,7 @@ fn main() {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
             commands::run_app,
+            commands::run_app_w,
             commands::read_et_mode,
             commands::write_et_mode,
             commands::read_user_config,

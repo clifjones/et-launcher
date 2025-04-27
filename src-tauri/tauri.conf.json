@@ -24,7 +24,7 @@
         "title": "et-launcher",
         "width": 800,
         "height": 600,
-        "resizable": false
+        "resizable": true
       }
     ],
     "security": {
