@@ -24,7 +24,7 @@ pub fn read_settings() -> Result<Settings, String> {
     let user_dirs = UserDirs::new().ok_or_else(|| "Could not determine home directory".to_string())?;
     let cfg_path: PathBuf = user_dirs
         .home_dir()
-        .join(".config/emcomm-tools/settings.json");
+        .join(".config/emcomm-tools/et-launcher.json");
 
     if cfg_path.exists() {
         let data = fs::read_to_string(&cfg_path)
