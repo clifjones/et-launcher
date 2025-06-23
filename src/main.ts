@@ -147,7 +147,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.getElementById("mode-btn")?.addEventListener("click", async () => {
     try {
-      const result = await invoke("run_app_w", { appName: "/usr/bin/vi" });
+      const result = await invoke("run_app_w", { appName: "et-mode" });
       appendToConsole(`et-mode: ${result}`);
       console.log("et-mode result:", result);
     } catch (error) {

@@ -24,8 +24,8 @@ struct ActiveRadio {
 
 #[command]
 pub fn run_app(app_name: &str) -> Result<String, String> {
-    let output = Command::new("python3")
-        .args(&["gnome-terminal", "--", app_name])
+    let output = Command::new("mterm")
+        .args(&["-e", app_name])
         .output()
         .map_err(|e| format!("Failed to execute {}: {}", app_name, e))?;
 

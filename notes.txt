@@ -500,3 +500,11 @@ npm install -g repomix
 repomix --init
 # package project
 repomix
+
+06/23/25 Fix shell exec
+* Install mlterm
+  sudo apt install mlterm
+
+* Exec app from mlterm
+  mlterm -e <command>
+
