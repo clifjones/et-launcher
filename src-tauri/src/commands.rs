@@ -5,6 +5,7 @@ use std::io::Read;
 use std::path::Path;
 use serde::{Deserialize, Serialize};
 use directories::UserDirs;
+use crate::settings;
 
 // Define the UserConfig struct for JSON serialization/deserialization
 #[derive(Serialize, Deserialize)]
@@ -24,8 +25,17 @@ struct ActiveRadio {
 
 #[command]
 pub fn run_app(app_name: &str) -> Result<String, String> {
-    let output = Command::new("mterm")
-        .args(&["-e", app_name])
+    //let output = Command::new("/usr/bin/mlterm")
+    //.args(&["-e", app_name])
+    //
+    // Load the launcher command from settings
+    let settings = settings::read_settings()
+        .map_err(|e| format!("Could not load settings: {}", e));
+    let terminal = settings.clone().unwrap().terminal_command;
+    let targ = settings.clone().unwrap().terminal_arg;
+    let output = Command::new(&terminal)
+        .arg(&targ)
+        .arg(app_name)
         .output()
         .map_err(|e| format!("Failed to execute {}: {}", app_name, e))?;
 

@@ -393,6 +393,8 @@ Opens a empty browser window and a tauri-app window
 npx tauri dev
 # Command for deploying
 npx tauri build
+# Command for cargo refresh
+cargo update
 
 git clone --recursive git@github.com:clifjones/et-os-addons.git
 
