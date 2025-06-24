@@ -1,5 +1,6 @@
 import "./style.css";
 import { invoke } from "@tauri-apps/api";
+import { listen } from "@tauri-apps/api/event";
 
 // Define the UserConfig interface
 interface UserConfig {
@@ -116,6 +117,23 @@ document.addEventListener("DOMContentLoaded", () => {
   loadMode();
   loadActiveRadio();
 
+  // -- console-toggle setup --------------------------------
+  // make sure .console-container exists in your HTML!
+  const consoleContainer = document.querySelector(
+    ".console-container"
+  ) as HTMLElement;
+  if (!consoleContainer) {
+    console.warn("No element with class .console-container found");
+  }
+
+  // register our toggle listener
+  listen<boolean>("toggle-console", (event) => {
+    console.log("[toggle-console] payload:", event.payload);
+    if (consoleContainer) {
+      consoleContainer.style.display = event.payload ? "block" : "none";
+    }
+  });
+
   // Save config form submission
   document.getElementById("user-config-form")?.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -139,6 +157,8 @@ document.addEventListener("DOMContentLoaded", () => {
       const result = await invoke("run_app", { appName: "et-radio" });
       appendToConsole(`et-radio: ${result}`);
       console.log("et-radio result:", result);
+      // ← re‐load active radio display
+    await loadActiveRadio();
     } catch (error) {
       appendToConsole(`et-radio Error: ${error}`);
       console.error("Failed to run et-radio:", error);

@@ -39,6 +39,7 @@ body {
   border: 1px solid #ccc; /* Keep border for visual separation */
   border-radius: 5px; /* Keep rounded corners */
   box-sizing: border-box;
+  display: none; /* Hide console until enabled */
 }
 
 .config-container h2,
