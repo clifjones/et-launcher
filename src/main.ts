@@ -126,11 +126,28 @@ document.addEventListener("DOMContentLoaded", () => {
     console.warn("No element with class .console-container found");
   }
 
+  // Update button handlers to fire-and-forget
+  const runApp = (appName: string) => {
+    invoke<string>("run_app", { appName })
+      .then(msg => appendToConsole(msg))
+      .catch(err => appendToConsole(`${appName} Error: ${err}`));
+  };
+
   // register our toggle listener
   listen<boolean>("toggle-console", (event) => {
     console.log("[toggle-console] payload:", event.payload);
     if (consoleContainer) {
       consoleContainer.style.display = event.payload ? "block" : "none";
+    }
+  });
+
+  // Listen for when the external app exits
+  listen<string>("app-exited", async ({ payload }) => {
+    appendToConsole(`${payload} exited`);
+    if (payload === "et-mode") {
+      await loadMode();
+    } else if (payload === "et-radio") {
+      await loadActiveRadio();
     }
   });
 
@@ -152,27 +169,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Attach event listeners to app buttons
-  document.getElementById("radio-btn")?.addEventListener("click", async () => {
-    try {
-      const result = await invoke("run_app", { appName: "et-radio" });
-      appendToConsole(`et-radio: ${result}`);
-      console.log("et-radio result:", result);
-      // ← re‐load active radio display
-    await loadActiveRadio();
-    } catch (error) {
-      appendToConsole(`et-radio Error: ${error}`);
-      console.error("Failed to run et-radio:", error);
-    }
-  });
+  document.getElementById("radio-btn")?.addEventListener("click", () => runApp("et-radio"));
+  document.getElementById("mode-btn")?.addEventListener("click", () => runApp("et-mode"));
 
-  document.getElementById("mode-btn")?.addEventListener("click", async () => {
-    try {
-      const result = await invoke("run_app", { appName: "et-mode" });
-      appendToConsole(`et-mode: ${result}`);
-      console.log("et-mode result:", result);
-    } catch (error) {
-      appendToConsole(`et-mode Error: ${error}`);
-      console.error("Failed to run et-mode:", error);
-    }
-  });
 });

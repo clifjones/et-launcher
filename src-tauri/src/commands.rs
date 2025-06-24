@@ -1,4 +1,4 @@
-use tauri::command;
+use tauri::{command, Window};
 use std::process::Command;
 use std::fs::{self, File};
 use std::io::Read;
@@ -24,29 +24,34 @@ struct ActiveRadio {
 }
 
 #[command]
-pub fn run_app(app_name: &str) -> Result<String, String> {
-    //let output = Command::new("/usr/bin/mlterm")
-    //.args(&["-e", app_name])
-    //
+pub fn run_app(window: Window, app_name: &str) -> Result<String, String> {
     // Load the launcher command from settings
     let settings = settings::read_settings()
         .map_err(|e| format!("Could not load settings: {}", e));
     let terminal = settings.clone().unwrap().terminal_command;
     let targ = settings.clone().unwrap().terminal_arg;
-    let output = Command::new(&terminal)
+
+    // Spawn the external app without blocking Tauri
+    let mut child = Command::new(&terminal)
         .arg(&targ)
         .arg(app_name)
-        .output()
-        .map_err(|e| format!("Failed to execute {}: {}", app_name, e))?;
+        .spawn()
+        .map_err(|e| format!("Failed to spawn {}: {}", app_name, e))?;
 
-    let stdout = String::from_utf8_lossy(&output.stdout).into_owned();
-    let stderr = String::from_utf8_lossy(&output.stderr).into_owned();
+    // Clone the window handle to emit on exit
+    let window_clone = window.clone();
+    let app = app_name.to_string();
+    std::thread::spawn(move || {
+        // Wait for the app to finish
+        if let Ok(status) = child.wait() {
+            let _ = window_clone.emit("app-exited", app.clone());
+        } else {
+            // Optionally emit an error event
+            let _ = window_clone.emit("app-exited-error", app.clone());
+        }
+    });
 
-    if output.status.success() {
-        Ok(stdout)
-    } else {
-        Err(stderr)
-    }
+    Ok(format!("{} launched", app_name))
 }
 
 #[command]
