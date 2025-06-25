@@ -510,3 +510,9 @@ repomix
 * Exec app from mlterm
   mlterm -e <command>
 
+---
+
+06/25/25 Re-work UI
+* Have most commands on a menu item.
+* Add Grid Square calculation
+

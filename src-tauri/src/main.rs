@@ -4,36 +4,84 @@
 mod commands;
 mod settings;
 
-// bring in all the menu types and the Manager trait for .emit()
-use tauri::{Builder, CustomMenuItem, Menu, Submenu, Manager};
+use tauri::{Builder, CustomMenuItem, Menu, Submenu};
 use std::sync::{Arc, atomic::{AtomicBool, Ordering}};
 
 fn main() {
-    // build a "View" submenu with a toggle item (unchecked by default)
+    // Define menu items
+    let mode_item = CustomMenuItem::new("mode", "Mode");
+    let quit_item = CustomMenuItem::new("quit", "Quit");
+    let file_menu = Submenu::new("File", Menu::new()
+        .add_item(mode_item)
+        .add_item(quit_item));
+
+    let user_item = CustomMenuItem::new("user", "User");
+    let radio_item = CustomMenuItem::new("radio", "Radio");
+    let edit_menu = Submenu::new("Edit", Menu::new()
+        .add_item(user_item)
+        .add_item(radio_item));
+
     let toggle_console = CustomMenuItem::new("toggle-console", "Show Console Output");
     let view_menu = Submenu::new("View", Menu::new().add_item(toggle_console));
-    // track whether the console is visible (default: false)
+
+    // Track console visibility
     let console_visible = Arc::new(AtomicBool::new(false));
     let console_visible_clone = console_visible.clone();
 
     Builder::default()
-        .menu(Menu::new().add_submenu(view_menu))
+        .menu(Menu::new()
+            .add_submenu(file_menu)
+            .add_submenu(edit_menu)
+            .add_submenu(view_menu))
         .on_menu_event(move |event| {
-            if event.menu_item_id() == "toggle-console" {
-                // flip the stored state
-                let prev = console_visible_clone.fetch_xor(true, Ordering::SeqCst);
-                let new_state = !prev;
-                let window = event.window();
-                // send the updated visibility to the frontend
-                window
-                    .emit("toggle-console", new_state)
-                    .unwrap_or_else(|e| eprintln!("emit error: {}", e));
-                // update the check mark
-                window
-                    .menu_handle()
-                    .get_item("toggle-console")
-                    .set_selected(new_state)
-                    .unwrap_or_else(|e| eprintln!("set_selected error: {}", e));
+            let window = event.window();
+            match event.menu_item_id() {
+                "mode" => {
+                    // Invoke run_app for et-mode
+                    tauri::async_runtime::spawn({
+                        let window = window.clone();
+                        async move {
+                            if let Err(e) = window.emit("run-app", "et-mode") {
+                                eprintln!("emit error: {}", e);
+                            }
+                        }
+                    });
+                }
+                "quit" => {
+                    // Exit the application
+                    std::process::exit(0);
+                }
+                "user" => {
+                    // Emit event to open user config dialog
+                    window
+                        .emit("open-user-config", ())
+                        .unwrap_or_else(|e| eprintln!("emit error: {}", e));
+                }
+                "radio" => {
+                    // Invoke run_app for et-radio
+                    tauri::async_runtime::spawn({
+                        let window = window.clone();
+                        async move {
+                            if let Err(e) = window.emit("run-app", "et-radio") {
+                                eprintln!("emit error: {}", e);
+                            }
+                        }
+                    });
+                }
+                "toggle-console" => {
+                    // Flip console visibility state
+                    let prev = console_visible_clone.fetch_xor(true, Ordering::SeqCst);
+                    let new_state = !prev;
+                    window
+                        .emit("toggle-console", new_state)
+                        .unwrap_or_else(|e| eprintln!("emit error: {}", e));
+                    window
+                        .menu_handle()
+                        .get_item("toggle-console")
+                        .set_selected(new_state)
+                        .unwrap_or_else(|e| eprintln!("set_selected error: {}", e));
+                }
+                _ => {}
             }
         })
         .invoke_handler(tauri::generate_handler![

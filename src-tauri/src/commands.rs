@@ -43,7 +43,7 @@ pub fn run_app(window: Window, app_name: &str) -> Result<String, String> {
     let app = app_name.to_string();
     std::thread::spawn(move || {
         // Wait for the app to finish
-        if let Ok(status) = child.wait() {
+        if let Ok(_status) = child.wait() {
             let _ = window_clone.emit("app-exited", app.clone());
         } else {
             // Optionally emit an error event

@@ -19,18 +19,6 @@ body {
   overflow-y: hidden; /* Allow scrolling if content overflows */
 }
 
-.config-container,
-.mode-container,
-.button-container {
-  width: 100%; /* Full width up to max-width */
-  max-width: 600px; /* Maintain max-width for readability */
-  margin: 5px 0; /* Reduced margin for tighter stacking */
-  padding: 8px; /* Minimal padding for internal spacing */
-  border: 1px solid #ccc; /* Keep border for visual separation */
-  border-radius: 5px; /* Keep rounded corners */
-  box-sizing: border-box;
-}
-
 .console-container {
   width: 100%; /* Match other containers */
   background-color: #f0f0f0; /* Match textarea background */  
@@ -42,9 +30,26 @@ body {
   display: none; /* Hide console until enabled */
 }
 
-.config-container h2,
-.mode-container h2 {
-  text-align: center; /* Center the User Configuration and Mode labels */
+.dialog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.dialog-content {
+  background: white;
+  padding: 20px;
+  border-radius: 5px;
+  width: 100%;
+  max-width: 600px;
+  box-sizing: border-box;
 }
 
 .form-group {
@@ -70,20 +75,17 @@ body {
   font-size: 14px;
 }
 
-#mode-display, #radio-display {
-  background-color: #f0f0f0;
+.dialog-buttons {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
 }
 
-button {
-  padding: 8px 16px; /* Slightly reduced padding */
-  margin: 0 8px; /* Reduced margin between buttons */
+.dialog-buttons button {
+  padding: 8px 16px;
+  margin-left: 10px;
   cursor: pointer;
-  font-size: 14px; /* Slightly smaller font for compactness */
-}
-
-#save-config-btn {
-  margin-top: 5px; /* Reduced margin */
-  width: 100px;
+  font-size: 14px;
 }
 
 label {
