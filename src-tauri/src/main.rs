@@ -90,7 +90,8 @@ fn main() {
             commands::write_et_mode,
             commands::read_user_config,
             commands::write_user_config,
-            commands::read_active_radio
+            commands::read_active_radio,
+            commands::get_gridsquare
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

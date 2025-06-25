@@ -8,6 +8,10 @@ pub struct Settings {
     pub terminal_command: String,
     /// Argument to pass to the terminal before the command to run (e.g. "-e")
     pub terminal_arg: String,
+    /// system info command
+    pub sys_info_cmd: String,
+    // Argument for system info command
+    pub sys_info_arg: String,
 }
 
 impl Default for Settings {
@@ -15,6 +19,8 @@ impl Default for Settings {
         Settings {
             terminal_command: "/usr/bin/mlterm".into(),
             terminal_arg: "-e".into(),
+            sys_info_cmd: "et-system-info".into(),
+            sys_info_arg: "et-gps".into(),
         }
     }
 }

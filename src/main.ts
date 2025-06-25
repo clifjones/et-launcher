@@ -28,6 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
           <div class="form-group">
             <label for="dialog-grid">Grid Square:</label>
             <input type="text" id="dialog-grid" name="grid" required />
+            <button type="button" id="calculate-grid">Calculate</button>
           </div>
           <div class="form-group">
             <label for="dialog-winlinkPasswd">Winlink Password:</label>
@@ -98,6 +99,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const dialog = document.getElementById("user-config-dialog") as HTMLElement;
   const form = document.getElementById("user-config-form") as HTMLFormElement;
   const cancelButton = document.getElementById("cancel-dialog") as HTMLButtonElement;
+  const calculateButton = document.getElementById("calculate-grid") as HTMLButtonElement;
 
   listen("open-user-config", async () => {
     try {
@@ -109,6 +111,18 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (error) {
       appendToConsole(`Failed to load user config: ${error}`);
       console.error("Failed to load user config:", error);
+    }
+  });
+
+  // Calculate grid square
+  calculateButton?.addEventListener("click", async () => {
+    try {
+      const gridSquare = await invoke<string>("get_gridsquare");
+      (document.getElementById("dialog-grid") as HTMLInputElement).value = gridSquare;
+      appendToConsole(`Grid square calculated: ${gridSquare}`);
+    } catch (error) {
+      appendToConsole(`Failed to calculate grid square: ${error}`);
+      console.error("Failed to calculate grid square:", error);
     }
   });
 
