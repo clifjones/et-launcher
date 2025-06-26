@@ -22,7 +22,10 @@ fn main() {
         .add_item(radio_item));
 
     let toggle_console = CustomMenuItem::new("toggle-console", "Show Console Output");
-    let view_menu = Submenu::new("View", Menu::new().add_item(toggle_console));
+    let radio_info_item = CustomMenuItem::new("radio-info", "Radio Info");
+    let view_menu = Submenu::new("View", Menu::new()
+        .add_item(radio_info_item)
+        .add_item(toggle_console));
 
     // Track console visibility
     let console_visible = Arc::new(AtomicBool::new(false));
@@ -68,6 +71,16 @@ fn main() {
                         }
                     });
                 }
+                "radio-info" => {
+                    let window_clone = window.clone();
+                    // Invoke our new command and emit the result to the front-end
+                    tauri::async_runtime::spawn(async move {
+                        match commands::get_radio_info() {
+                            Ok(info) => { let _ = window_clone.emit("radio-info", info); }
+                            Err(e)   => { let _ = window_clone.emit("radio-info-error", e); }
+                        }
+                    });
+                }
                 "toggle-console" => {
                     // Flip console visibility state
                     let prev = console_visible_clone.fetch_xor(true, Ordering::SeqCst);
@@ -91,7 +104,8 @@ fn main() {
             commands::read_user_config,
             commands::write_user_config,
             commands::read_active_radio,
-            commands::get_gridsquare
+            commands::get_gridsquare,
+            commands::get_radio_info
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

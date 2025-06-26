@@ -12,6 +12,8 @@ pub struct Settings {
     pub sys_info_cmd: String,
     // Argument for system info command
     pub sys_info_arg: String,
+    // Location of active-radio config
+    pub active_radio: String,
 }
 
 impl Default for Settings {
@@ -21,6 +23,7 @@ impl Default for Settings {
             terminal_arg: "-e".into(),
             sys_info_cmd: "et-system-info".into(),
             sys_info_arg: "et-gps".into(),
+            active_radio: "/opt/emcomm-tools/conf/radios.d/active-radio.json".into(),
         }
     }
 }

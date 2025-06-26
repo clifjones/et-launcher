@@ -516,3 +516,8 @@ repomix
 * Have most commands on a menu item.
 * Add Grid Square calculation
 
+---
+
+06/25/25 Add Radio Notes, etc.
+* Add a pane to see the radio notes corresponding to the selected radio.
+

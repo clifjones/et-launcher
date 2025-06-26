@@ -23,6 +23,20 @@ struct ActiveRadio {
     model: String,
 }
 
+#[derive(Serialize,Clone)]
+pub struct RadioInfo {
+    pub notes: Vec<String>,
+    #[serde(rename = "fieldNotes")]
+    pub field_notes: Vec<String>,
+}
+
+#[derive(Deserialize)]
+struct RadioConfig {
+    notes: Vec<String>,
+    #[serde(rename = "fieldNotes")]
+    field_notes: Vec<String>,
+}
+
 // Function to convert lat/long to 6-character Maidenhead locator
 fn lat_long_to_maidenhead(lat: f64, lon: f64) -> String {
     // Ensure coordinates are within valid ranges
@@ -223,3 +237,25 @@ pub fn read_active_radio() -> Result<String, String> {
         Ok("NO-RADIO".to_string())
     }
 }
+
+#[command]
+pub fn get_radio_info() -> Result<RadioInfo, String> {
+    // Load the path to the active radio config
+    let settings = settings::read_settings()
+        .map_err(|e| format!("Could not load settings: {}", e))?;
+    let path = settings.active_radio;
+    // Read and parse the JSON config
+    let mut file = File::open(&path)
+        .map_err(|e| format!("Failed to open radio config file {}: {}", path, e))?;
+    let mut contents = String::new();
+    file.read_to_string(&mut contents)
+        .map_err(|e| format!("Failed to read radio config file: {}", e))?;
+    let config: RadioConfig = serde_json::from_str(&contents)
+        .map_err(|e| format!("Failed to parse radio config JSON: {}", e))?;
+    // Return only the two needed sections
+    Ok(RadioInfo {
+        notes: config.notes,
+        field_notes: config.field_notes,
+    })
+}
+

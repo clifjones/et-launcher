@@ -19,6 +19,18 @@ body {
   overflow-y: hidden; /* Allow scrolling if content overflows */
 }
 
+/* Main view pane for displaying radio info */
+.main-view {
+  width: 100%;
+  background-color: #f9f9f9;
+  margin: 5px 0;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
 .console-container {
   width: 100%; /* Match other containers */
   background-color: #f0f0f0; /* Match textarea background */  

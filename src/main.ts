@@ -13,6 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const app = document.createElement("div");
   app.id = "app";
   app.innerHTML = `
+    <div id="main-view"></div>
     <div class="console-container">
       <label for="console-output">Console Output</label>
       <textarea id="console-output" readonly></textarea>
@@ -93,6 +94,19 @@ document.addEventListener("DOMContentLoaded", () => {
   // Listen for app exit events
   listen<string>("app-exited", async ({ payload }) => {
     appendToConsole(`${payload} exited`);
+  });
+
+  // Listen for Radio Info and render into the main view pane
+  listen<{ notes: string[]; fieldNotes: string[] }>("radio-info", (event) => {
+    const info = event.payload;
+    const mainView = document.getElementById("main-view") as HTMLElement;
+    if (mainView) {
+      mainView.innerHTML =
+        "<h3>Setup Notes</h3>" +
+        info.notes.map((n) => `<div>${n}</div>`).join("") +
+        "<h3>Field Notes</h3>" +
+        info.fieldNotes.map((fn) => `<div>${fn}</div>`).join("");
+    }
   });
 
   // Handle user config dialog
