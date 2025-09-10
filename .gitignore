@@ -12,6 +12,7 @@ dist
 dist-ssr
 *.local
 et-os-addons
+repomix-output.xml
 
 # Editor directories and files
 .vscode/*

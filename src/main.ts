@@ -1,5 +1,6 @@
 import "./style.css";
-import { invoke } from "@tauri-apps/api/core";
+import { invoke } from "@tauri-apps/api";
+import { listen } from "@tauri-apps/api/event";
 
 // Define the UserConfig interface
 interface UserConfig {
@@ -12,49 +13,43 @@ document.addEventListener("DOMContentLoaded", () => {
   const app = document.createElement("div");
   app.id = "app";
   app.innerHTML = `
-    <h1>App Launcher</h1>
-    
-    <div class="config-container">
-      <h2>User Configuration</h2>
-      <form id="user-config-form">
-        <div class="form-group">
-          <label for="callsign">Callsign:</label>
-          <input type="text" id="callsign" name="callsign" required />
-        </div>
-        <div class="form-group">
-          <label for="grid">Grid Square:</label>
-          <input type="text" id="grid" name="grid" required />
-        </div>
-        <div class="form-group">
-          <label for="winlinkPasswd">Winlink Password:</label>
-          <input type="password" id="winlinkPasswd" name="winlinkPasswd" required />
-        </div>
-        <button type="submit" id="save-config-btn">Save</button>
-      </form>
-    </div>
-    
-    <div class="mode-container">
-      <h2>Mode</h2>
-      <div class="form-group">
-        <label for="radio-display">Radio:</label>
-        <input type="text" id="radio-display" readonly />
-      </div>
-      <div class="form-group">
-        <label for="mode-display">Mode:</label>
-        <input type="text" id="mode-display" readonly />
-      </div>
-    </div>
-    
-    <div class="button-container">
-      <button id="app1-btn">App 1</button>
-      <button id="app2-btn">App 2</button>
-    </div>
-    
+    <div id="main-view"></div>
     <div class="console-container">
-      <label for="console-output">Console Output:</label>
+      <label for="console-output">Console Output</label>
       <textarea id="console-output" readonly></textarea>
     </div>
+    <div id="user-config-dialog" class="dialog" style="display: none;">
+      <div class="dialog-content">
+        <h2>User Configuration</h2>
+        <form id="user-config-form">
+          <div class="form-group">
+            <label for="dialog-callsign">Callsign:</label>
+            <input type="text" id="dialog-callsign" name="callsign" required />
+          </div>
+          <div class="form-group">
+            <label for="dialog-grid">Grid Square:</label>
+            <input type="text" id="dialog-grid" name="grid" required />
+            <button type="button" id="calculate-grid">Calculate</button>
+          </div>
+          <div class="form-group">
+            <label for="dialog-winlinkPasswd">Winlink Password:</label>
+            <input type="password" id="dialog-winlinkPasswd" name="winlinkPasswd" required />
+          </div>
+          <div class="dialog-buttons">
+            <button type="submit">Save</button>
+            <button type="button" id="cancel-dialog">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
   `;
+  
+  // Remove existing app element if it exists
+  const existingApp = document.getElementById("app");
+  if (existingApp && existingApp.parentNode) {
+    existingApp.parentNode.removeChild(existingApp);
+  }
+  
   document.body.appendChild(app);
 
   // Function to append output to the console textarea
@@ -68,86 +63,103 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  // Load user config
-  const loadUserConfig = async () => {
+  // Console toggle setup
+  const consoleContainer = document.querySelector(
+    ".console-container"
+  ) as HTMLElement;
+  if (!consoleContainer) {
+    console.warn("No element with class .console-container found");
+  }
+
+  // Run app function
+  const runApp = (appName: string) => {
+    invoke<string>("run_app", { appName })
+      .then(msg => appendToConsole(msg))
+      .catch(err => appendToConsole(`${appName} Error: ${err}`));
+  };
+
+  // Register toggle console listener
+  listen<boolean>("toggle-console", (event) => {
+    console.log("[toggle-console] payload:", event.payload);
+    if (consoleContainer) {
+      consoleContainer.style.display = event.payload ? "block" : "none";
+    }
+  });
+
+  // Listen for run-app events from menu
+  listen<string>("run-app", (event) => {
+    runApp(event.payload);
+  });
+
+  // Listen for app exit events
+  listen<string>("app-exited", async ({ payload }) => {
+    appendToConsole(`${payload} exited`);
+  });
+
+  // Listen for Radio Info and render into the main view pane
+  listen<{ notes: string[]; fieldNotes: string[] }>("radio-info", (event) => {
+    const info = event.payload;
+    const mainView = document.getElementById("main-view") as HTMLElement;
+    if (mainView) {
+      mainView.innerHTML =
+        "<h3>Setup Notes</h3>" +
+        info.notes.map((n) => `<div>${n}</div>`).join("") +
+        "<h3>Field Notes</h3>" +
+        info.fieldNotes.map((fn) => `<div>${fn}</div>`).join("");
+    }
+  });
+
+  // Handle user config dialog
+  const dialog = document.getElementById("user-config-dialog") as HTMLElement;
+  const form = document.getElementById("user-config-form") as HTMLFormElement;
+  const cancelButton = document.getElementById("cancel-dialog") as HTMLButtonElement;
+  const calculateButton = document.getElementById("calculate-grid") as HTMLButtonElement;
+
+  listen("open-user-config", async () => {
     try {
       const config = await invoke<UserConfig>("read_user_config");
-      (document.getElementById("callsign") as HTMLInputElement).value = config.callsign;
-      (document.getElementById("grid") as HTMLInputElement).value = config.grid;
-      (document.getElementById("winlinkPasswd") as HTMLInputElement).value = config.winlinkPasswd;
-      appendToConsole("User config loaded successfully");
+      (document.getElementById("dialog-callsign") as HTMLInputElement).value = config.callsign;
+      (document.getElementById("dialog-grid") as HTMLInputElement).value = config.grid;
+      (document.getElementById("dialog-winlinkPasswd") as HTMLInputElement).value = config.winlinkPasswd;
+      dialog.style.display = "block";
     } catch (error) {
       appendToConsole(`Failed to load user config: ${error}`);
       console.error("Failed to load user config:", error);
     }
-  };
+  });
 
-  // Load mode
-  const loadMode = async () => {
+  // Calculate grid square
+  calculateButton?.addEventListener("click", async () => {
     try {
-      const mode = await invoke<string>("read_et_mode");
-      (document.getElementById("mode-display") as HTMLInputElement).value = mode;
-      appendToConsole("Mode loaded successfully");
+      const gridSquare = await invoke<string>("get_gridsquare");
+      (document.getElementById("dialog-grid") as HTMLInputElement).value = gridSquare;
+      appendToConsole(`Grid square calculated: ${gridSquare}`);
     } catch (error) {
-      appendToConsole(`Failed to load mode: ${error}`);
-      console.error("Failed to load mode:", error);
+      appendToConsole(`Failed to calculate grid square: ${error}`);
+      console.error("Failed to calculate grid square:", error);
     }
-  };
-
-  // Load active radio
-  const loadActiveRadio = async () => {
-    try {
-      const radio = await invoke<string>("read_active_radio");
-      (document.getElementById("radio-display") as HTMLInputElement).value = radio;
-      appendToConsole("Active radio loaded successfully");
-    } catch (error) {
-      appendToConsole(`Failed to load active radio: ${error}`);
-      console.error("Failed to load active radio:", error);
-    }
-  };
-
-  // Initialize config, mode, and radio
-  loadUserConfig();
-  loadMode();
-  loadActiveRadio();
+  });
 
   // Save config form submission
-  document.getElementById("user-config-form")?.addEventListener("submit", async (e) => {
+  form?.addEventListener("submit", async (e) => {
     e.preventDefault();
     const config: UserConfig = {
-      callsign: (document.getElementById("callsign") as HTMLInputElement).value,
-      grid: (document.getElementById("grid") as HTMLInputElement).value,
-      winlinkPasswd: (document.getElementById("winlinkPasswd") as HTMLInputElement).value,
+      callsign: (document.getElementById("dialog-callsign") as HTMLInputElement).value,
+      grid: (document.getElementById("dialog-grid") as HTMLInputElement).value,
+      winlinkPasswd: (document.getElementById("dialog-winlinkPasswd") as HTMLInputElement).value,
     };
     try {
       await invoke("write_user_config", { config });
       appendToConsole("User config saved successfully");
+      dialog.style.display = "none";
     } catch (error) {
       appendToConsole(`Failed to save user config: ${error}`);
       console.error("Failed to save user config:", error);
     }
   });
 
-  // Attach event listeners to app buttons
-  document.getElementById("app1-btn")?.addEventListener("click", async () => {
-    try {
-      const result = await invoke("run_app", { appName: "emacs" });
-      appendToConsole(`App 1: ${result}`);
-      console.log("App 1 result:", result);
-    } catch (error) {
-      appendToConsole(`App 1 Error: ${error}`);
-      console.error("Failed to run App 1:", error);
-    }
-  });
-
-  document.getElementById("app2-btn")?.addEventListener("click", async () => {
-    try {
-      const result = await invoke("run_app", { appName: "date" });
-      appendToConsole(`App 2: ${result}`);
-      console.log("App 2 result:", result);
-    } catch (error) {
-      appendToConsole(`App 2 Error: ${error}`);
-      console.error("Failed to run App 2:", error);
-    }
+  // Cancel dialog
+  cancelButton?.addEventListener("click", () => {
+    dialog.style.display = "none";
   });
 });
