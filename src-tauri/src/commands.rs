@@ -32,8 +32,9 @@ pub struct RadioInfo {
 
 #[derive(Deserialize)]
 struct RadioConfig {
+    #[serde(default)]
     notes: Vec<String>,
-    #[serde(rename = "fieldNotes")]
+    #[serde(default, rename = "fieldNotes")]
     field_notes: Vec<String>,
 }
 
@@ -253,9 +254,22 @@ pub fn get_radio_info() -> Result<RadioInfo, String> {
     let config: RadioConfig = serde_json::from_str(&contents)
         .map_err(|e| format!("Failed to parse radio config JSON: {}", e))?;
     // Return only the two needed sections
+    // Check if notes or field_notes are empty and assign "<No Notes>" if so
+    let notes = if config.notes.is_empty() {
+        vec!["No Notes".to_string()]
+    } else {
+        config.notes
+    };
+    
+    let field_notes = if config.field_notes.is_empty() {
+        vec!["No Notes".to_string()]
+    } else {
+        config.field_notes
+    };
+    
     Ok(RadioInfo {
-        notes: config.notes,
-        field_notes: config.field_notes,
+        notes,
+        field_notes,
     })
 }
 
