@@ -3,7 +3,7 @@ name: 'main'
 on:
   push:
     branches:
-      - tauri-1
+      - main
 
 
 jobs:
@@ -30,8 +30,6 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y libwebkit2gtk-4.0-dev libayatana-appindicator3-dev librsvg2-dev patchelf libxdo-dev libssl-dev dbus-x11 libcanberra-gtk3-module
-        # webkitgtk 4.0 is for Tauri v1 - webkitgtk 4.1 is for Tauri v2.
-        # You can remove the one that doesn't apply to your app to speed up the workflow a bit.
       - name: Install pnpm
         uses: pnpm/action-setup@v2
         with:
